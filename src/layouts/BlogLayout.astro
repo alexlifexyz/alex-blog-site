@@ -23,12 +23,7 @@ const navItems = [
   { label: "归档", href: "/archive" },
   { label: "标签", href: "/archive#tags" },
   { label: "RSS", href: "/rss.xml", external: true },
-];
-
-const liveItems = [
-  { label: "主站", href: "https://alexai.top" },
-  { label: "RAG Lab", href: "https://rag.alexai.top" },
-  { label: "Chat", href: "https://chat.alexai.top" },
+  { label: "主站", href: "https://alexai.top", external: true },
 ];
 ---
 
@@ -107,16 +102,6 @@ const liveItems = [
               </svg>
               <span class="search-btn-kbd mono">⌘K</span>
             </button>
-          </nav>
-          <nav class="site-live" aria-label="Live systems">
-            {
-              liveItems.map((item) => (
-                <a class="nav-live" href={item.href} target="_blank" rel="noopener noreferrer">
-                  <i class="led" aria-hidden="true" />
-                  {item.label}
-                </a>
-              ))
-            }
           </nav>
         </div>
       </header>
