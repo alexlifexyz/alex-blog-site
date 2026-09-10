@@ -1,0 +1,169 @@
+---
+import BrandMark from "../components/BrandMark.astro";
+import ThemeSwitch from "../components/ThemeSwitch.astro";
+import SearchModal from "../components/SearchModal.astro";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+  image?: string;
+}
+
+const {
+  title = "Alex.blog — 技术沉淀与数字花园",
+  description = "何占伟 / Alex 的独立技术博客：专注企业级 RAG、Java 架构底座、AI 工业落地与行业思考。",
+  path = "/",
+  image = "/social-card.jpg",
+} = Astro.props;
+
+const navItems = [
+  { label: "文章", href: "/" },
+  { label: "归档", href: "/archive" },
+  { label: "标签", href: "/archive#tags" },
+  { label: "RSS", href: "/rss.xml", external: true },
+];
+
+const liveItems = [
+  { label: "主站", href: "https://alexai.top" },
+  { label: "RAG Lab", href: "https://rag.alexai.top" },
+  { label: "Chat", href: "https://chat.alexai.top" },
+];
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#05070A" />
+    <script is:inline>
+      (function () {
+        var KEY = "alexai-theme";
+        var pref = "system";
+        try {
+          pref = localStorage.getItem(KEY) || "system";
+        } catch (e) {}
+        if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
+        var theme =
+          pref === "system"
+            ? window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light"
+            : pref;
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.themePref = pref;
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute("content", theme === "light" ? "#F4F6F8" : "#05070A");
+      })();
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:site_name" content="blog.alexai.top" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.url)} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="app-frame">
+      <header class="site-header">
+        <div class="page-shell site-header-inner">
+          <div class="header-brandline">
+            <a class="brand" href="/">
+              <span class="brand-mark"><BrandMark /></span>
+              <span class="brand-title">Alex<span class="ai">.blog</span></span>
+            </a>
+            <ThemeSwitch />
+          </div>
+          <nav class="site-nav" aria-label="Primary">
+            {
+              navItems.map((item) => (
+                <a 
+                  href={item.href} 
+                  aria-current={path === item.href ? "page" : undefined}
+                  target={item.external ? "_blank" : undefined}
+                  rel={item.external ? "noopener noreferrer" : undefined}
+                >
+                  {item.label}
+                </a>
+              ))
+            }
+            <button class="nav-search-btn print-hide" data-open-search title="搜索文章 (快捷键 ⌘K 或 /)" aria-label="全站搜索">
+              <svg class="search-btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <span class="search-btn-kbd mono">⌘K</span>
+            </button>
+          </nav>
+          <nav class="site-live" aria-label="Live systems">
+            {
+              liveItems.map((item) => (
+                <a class="nav-live" href={item.href} target="_blank" rel="noopener noreferrer">
+                  <i class="led" aria-hidden="true" />
+                  {item.label}
+                </a>
+              ))
+            }
+          </nav>
+        </div>
+      </header>
+      <main>
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <div class="page-shell">
+          <div class="footer-inner">
+            <div class="footer-brand">
+              <a class="brand" href="/" style="margin-bottom: 1.25rem;">
+                <span class="brand-mark"><BrandMark /></span>
+                <span class="brand-title">Alex<span class="ai">.blog</span></span>
+              </a>
+              <p style="line-height: 1.8; color: var(--text-muted); max-width: 360px;">
+                何占伟 / Alex 的独立技术博客与数字花园。<br />
+                持续输出企业级 RAG 实战、Java 架构工程与底层思考。
+              </p>
+            </div>
+            <div class="footer-nav-col">
+              <h4>专题分类</h4>
+              <ul>
+                <li><a href="/?cat=ai-engineering">AI 工业落地</a></li>
+                <li><a href="/?cat=architecture">Java 架构底座</a></li>
+                <li><a href="/?cat=insights">行业观察思考</a></li>
+                <li><a href="/?cat=essays">工程随笔生活</a></li>
+              </ul>
+            </div>
+            <div class="footer-nav-col">
+              <h4>关联系统</h4>
+              <ul>
+                <li><a href="https://alexai.top" target="_blank" rel="noopener noreferrer">Alex.ai 个人主站</a></li>
+                <li><a href="https://rag.alexai.top" target="_blank" rel="noopener noreferrer">Java RAG Lab</a></li>
+                <li><a href="https://chat.alexai.top" target="_blank" rel="noopener noreferrer">AI Assistant Suite</a></li>
+                <li><a href="https://github.com/alexlifexyz" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-meta">
+            <p>&copy; {new Date().getFullYear()} 何占伟 · blog.alexai.top</p>
+            <p>Astro · Pagefind · Cloudflare Pages</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- 全站秒级全文检索弹窗 -->
+    <SearchModal />
+  </body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "alex-blog-site",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build && pagefind --site dist",
+    "preview": "astro preview",
+    "check": "astro check",
+    "sync:wechat": "python3 scripts/sync-wechat-posts.py",
+    "cf:deploy": "bash scripts/deploy-pages.sh"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.6.0",
+    "astro": "^5.13.5",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "pagefind": "^1.5.2",
+    "typescript": "^5.9.2",
+    "wrangler": "^4.130.0"
+  }
+}

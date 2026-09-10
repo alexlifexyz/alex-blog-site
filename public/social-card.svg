@@ -1,0 +1,24 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with Grid -->
+  <rect width="1200" height="630" fill="#fdfcfb"/>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e8e4df" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Brand Mark -->
+  <rect x="550" y="160" width="100" height="100" rx="12" fill="#1c1c1c"/>
+  <path d="M582 195L570 210L582 225" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M618 195L630 210L618 225" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M610 192L592 228" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  
+  <!-- Content -->
+  <text fill="#1c1c1c" xml:space="preserve" style="white-space: pre" font-family="Inter, system-ui, sans-serif" font-size="64" font-weight="800" letter-spacing="-0.04em"><tspan x="465" y="340">Alex.xyz</tspan></text>
+  <text fill="#5a5a5a" xml:space="preserve" style="white-space: pre" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="600" letter-spacing="-0.02em"><tspan x="340" y="410">10年Java后端 —> AI应用 &amp; 独立开发</tspan></text>
+  
+  <!-- URL -->
+  <rect x="520" y="480" width="160" height="40" rx="4" fill="#1e40af" fill-opacity="0.05"/>
+  <text fill="#1e40af" xml:space="preserve" style="white-space: pre" font-family="JetBrains Mono, monospace" font-size="20" font-weight="600" letter-spacing="0.05em"><tspan x="540" y="506">alexai.top</tspan></text>
+</svg>

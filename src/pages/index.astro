@@ -1,0 +1,676 @@
+---
+import { getCollection } from "astro:content";
+import BlogLayout from "../layouts/BlogLayout.astro";
+import WeChatCard from "../components/WeChatCard.astro";
+import { CATEGORIES, normalizeCategory, getCategoryMeta } from "../utils/categories";
+
+const allPosts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const featuredPosts = allPosts.filter((p) => p.data.pinned || p.data.featured).slice(0, 3);
+
+// 统计各分类文章数量
+const categoryCounts: Record<string, number> = { all: allPosts.length };
+for (const catKey of Object.keys(CATEGORIES)) {
+  categoryCounts[catKey] = allPosts.filter(
+    (p) => normalizeCategory(p.data.category) === catKey
+  ).length;
+}
+
+// 统计热门标签
+const tagMap: Record<string, number> = {};
+for (const post of allPosts) {
+  for (const t of post.data.tags) {
+    tagMap[t] = (tagMap[t] || 0) + 1;
+  }
+}
+const topTags = Object.entries(tagMap)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 20);
+---
+
+<BlogLayout title="Alex.blog — 技术沉淀与数字花园" path="/">
+  <div class="content-wrap blog-wrap">
+    <!-- Header Hero -->
+    <header class="blog-header">
+      <div class="blog-header-top">
+        <span class="section-label mono">Alex's Digital Garden</span>
+        <div class="blog-header-links">
+          <a href="/archive" class="header-link mono">时间归档 →</a>
+          <a href="/rss.xml" target="_blank" class="header-link mono rss-link">RSS 订阅 ↗</a>
+        </div>
+      </div>
+      <h1 class="blog-title">技术沉淀与思考</h1>
+      <p class="hero-lead">
+        长期记录企业级 RAG、Java 架构底座与 AI 工业落地的生产实战，沉淀大模型时代下的工程思考与心路随笔。
+      </p>
+    </header>
+
+    <!-- Featured Pinned Section -->
+    {
+      featuredPosts.length > 0 && (
+        <section class="featured-section">
+          <div class="section-badge mono">精选必读</div>
+          <div class="featured-grid">
+            {featuredPosts.map((post) => {
+              const cat = getCategoryMeta(post.data.category);
+              return (
+                <a href={`/posts/${post.slug}/`} class="featured-card">
+                  <div class="featured-top">
+                    <span class="cat-pill" style={`color: ${cat.color}; background: color-mix(in srgb, ${cat.color} 12%, transparent);`}>
+                      {cat.name}
+                    </span>
+                    <span class="featured-date mono">
+                      {post.data.pubDate.toLocaleDateString("zh-CN", { month: "short", day: "numeric" })}
+                    </span>
+                  </div>
+                  <h3 class="featured-title">{post.data.title}</h3>
+                  <p class="featured-desc">{post.data.description}</p>
+                  <div class="featured-footer mono">
+                    <span>阅读全文 →</span>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      )
+    }
+
+    <!-- Main Layout with Two Columns -->
+    <div class="blog-main">
+      <div class="posts-column">
+        <!-- Controls: Category Filter Tabs & View Switcher -->
+        <div class="filter-bar">
+          <div class="category-tabs" id="category-tabs">
+            <button class="cat-tab active" data-cat="all">
+              全部 <span class="tab-count">{categoryCounts["all"]}</span>
+            </button>
+            <button class="cat-tab" data-cat="ai-engineering">
+              AI 工业落地 <span class="tab-count">{categoryCounts["ai-engineering"]}</span>
+            </button>
+            <button class="cat-tab" data-cat="architecture">
+              Java 架构 <span class="tab-count">{categoryCounts["architecture"]}</span>
+            </button>
+            <button class="cat-tab" data-cat="insights">
+              行业观察 <span class="tab-count">{categoryCounts["insights"]}</span>
+            </button>
+            <button class="cat-tab" data-cat="essays">
+              随笔生活 <span class="tab-count">{categoryCounts["essays"]}</span>
+            </button>
+          </div>
+
+          <div class="view-switcher" id="view-switcher">
+            <button class="view-btn active" data-view="card" title="卡片摘要视图" aria-label="卡片视图">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            </button>
+            <button class="view-btn" data-view="compact" title="紧凑列表视图" aria-label="紧凑视图">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Posts Container -->
+        <div class="posts-container view-card" id="posts-container">
+          {
+            allPosts.map((post) => {
+              const normCat = normalizeCategory(post.data.category);
+              const cat = getCategoryMeta(post.data.category);
+              const dateFormatted = post.data.pubDate
+                .toLocaleDateString("zh-CN", { year: "numeric", month: "2-digit", day: "2-digit" })
+                .replace(/\//g, ".");
+              return (
+                <article class="post-item" data-category={normCat}>
+                  <div class="post-date mono">{dateFormatted}</div>
+                  <div class="post-content">
+                    <a href={`/posts/${post.slug}/`} class="post-title-link">
+                      <h3 class="post-title">{post.data.title}</h3>
+                    </a>
+                    <p class="post-desc">{post.data.description}</p>
+                    <div class="post-meta">
+                      <span class="cat-tag" style={`color: ${cat.color}; background: color-mix(in srgb, ${cat.color} 10%, transparent);`}>
+                        {cat.name}
+                      </span>
+                      {post.data.tags.slice(0, 3).map((tag) => (
+                        <a href={`/tags/${tag}`} class="tag" style="text-decoration: none;">#{tag}</a>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              );
+            })
+          }
+        </div>
+      </div>
+
+      <!-- Right Column Sidebar -->
+      <aside class="blog-sidebar">
+        <!-- Author Profile Box -->
+        <div class="sidebar-box author-box">
+          <h4 class="sidebar-title mono">关于作者</h4>
+          <p class="author-name">何占伟 / Alex</p>
+          <p class="author-bio">
+            成都。11 年 Java 后端与高可用架构经验，目前全力深耕企业级 RAG、混合检索与 Agent 工具编排工程。
+          </p>
+          <div class="author-links mono">
+            <a href="https://alexai.top" target="_blank" rel="noopener noreferrer">个人主站 ↗</a>
+            <a href="https://github.com/alexlifexyz" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+            <a href="/rss.xml" target="_blank" rel="noopener noreferrer">RSS ↗</a>
+          </div>
+        </div>
+
+        <!-- WeChat Subscribe Card -->
+        <WeChatCard variant="sidebar" />
+
+        <!-- Tag Cloud Box -->
+        <div class="sidebar-box tags-box" id="tags">
+          <h4 class="sidebar-title mono">标签聚合</h4>
+          <div class="tag-cloud">
+            {topTags.map(([tag, count]) => (
+              <a href={`/tags/${tag}`} class="tag-cloud-item">
+                <span class="tag-name">#{tag}</span>
+                <span class="tag-num mono">{count}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</BlogLayout>
+
+<script is:inline>
+  (function () {
+    // 1. 分类筛选交互
+    var categoryTabs = document.getElementById("category-tabs");
+    var postItems = document.querySelectorAll(".post-item");
+
+    if (categoryTabs) {
+      categoryTabs.addEventListener("click", function (e) {
+        var btn = e.target.closest(".cat-tab");
+        if (!btn) return;
+
+        categoryTabs.querySelectorAll(".cat-tab").forEach(function (b) {
+          b.classList.remove("active");
+        });
+        btn.classList.add("active");
+
+        var targetCat = btn.getAttribute("data-cat");
+        postItems.forEach(function (item) {
+          var itemCat = item.getAttribute("data-category");
+          if (targetCat === "all" || itemCat === targetCat) {
+            item.style.display = "";
+          } else {
+            item.style.display = "none";
+          }
+        });
+      });
+    }
+
+    // 2. URL 参数自动定位分类 (?cat=xxx)
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var initialCat = params.get("cat");
+      if (initialCat) {
+        var matchBtn = document.querySelector('.cat-tab[data-cat="' + initialCat + '"]');
+        if (matchBtn) matchBtn.click();
+      }
+    } catch (e) {}
+
+    // 3. 视图切换交互 (Card vs Compact)
+    var viewSwitcher = document.getElementById("view-switcher");
+    var postsContainer = document.getElementById("posts-container");
+    var STORAGE_KEY = "alex-blog-view-mode";
+
+    if (viewSwitcher && postsContainer) {
+      var savedMode = localStorage.getItem(STORAGE_KEY) || "card";
+      setViewMode(savedMode);
+
+      viewSwitcher.addEventListener("click", function (e) {
+        var btn = e.target.closest(".view-btn");
+        if (!btn) return;
+        var mode = btn.getAttribute("data-view");
+        setViewMode(mode);
+        try {
+          localStorage.setItem(STORAGE_KEY, mode);
+        } catch (err) {}
+      });
+
+      function setViewMode(mode) {
+        viewSwitcher.querySelectorAll(".view-btn").forEach(function (b) {
+          b.classList.toggle("active", b.getAttribute("data-view") === mode);
+        });
+        if (mode === "compact") {
+          postsContainer.classList.remove("view-card");
+          postsContainer.classList.add("view-compact");
+        } else {
+          postsContainer.classList.remove("view-compact");
+          postsContainer.classList.add("view-card");
+        }
+      }
+    }
+  })();
+</script>
+
+<style>
+  .blog-wrap {
+    padding-top: 1.5rem;
+    padding-bottom: 4rem;
+  }
+  .blog-header {
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1.75rem;
+  }
+  .blog-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .blog-header-links {
+    display: flex;
+    gap: 1rem;
+  }
+  .header-link {
+    font-size: 0.8rem;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    transition: all 0.15s ease;
+  }
+  .header-link:hover {
+    border-color: var(--accent);
+    background: var(--elevated);
+  }
+  .blog-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin: 0.25rem 0 0.75rem 0;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .hero-lead {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--text-muted);
+    max-width: 780px;
+    margin: 0;
+  }
+
+  /* Featured Pinned Grid */
+  .featured-section {
+    margin-bottom: 3rem;
+    position: relative;
+  }
+  .section-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1rem;
+    letter-spacing: 0.04em;
+  }
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .featured-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .featured-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    background: var(--elevated);
+    box-shadow: var(--shadow-sm);
+  }
+  .featured-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .cat-pill {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+  .featured-date {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+  }
+  .featured-title {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--text);
+    margin: 0 0 0.5rem 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .featured-desc {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+    margin: 0 0 1rem 0;
+    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .featured-footer {
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* Two Column Main Layout */
+  .blog-main {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  /* Filter Bar */
+  .filter-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.85rem;
+  }
+  .category-tabs {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .cat-tab {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .cat-tab:hover {
+    color: var(--text);
+    background: var(--surface);
+  }
+  .cat-tab.active {
+    background: var(--surface);
+    border-color: var(--line);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .tab-count {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    font-family: var(--mono);
+  }
+
+  /* View Switcher */
+  .view-switcher {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 2px;
+  }
+  .view-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 4px 7px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+  }
+  .view-btn:hover {
+    color: var(--text);
+  }
+  .view-btn.active {
+    background: var(--elevated);
+    color: var(--accent);
+  }
+
+  /* Post List: Card View */
+  .posts-container.view-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .posts-container.view-card .post-item {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    transition: all 0.2s ease;
+  }
+  .posts-container.view-card .post-item:hover {
+    border-color: var(--line-strong);
+    background: var(--elevated);
+  }
+  .posts-container.view-card .post-date {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    min-width: 85px;
+    padding-top: 3px;
+  }
+  .posts-container.view-card .post-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0 0 0.4rem 0;
+    color: var(--text);
+    line-height: 1.4;
+    transition: color 0.15s ease;
+  }
+  .posts-container.view-card .post-title-link {
+    text-decoration: none;
+  }
+  .posts-container.view-card .post-title-link:hover .post-title {
+    color: var(--accent);
+  }
+  .posts-container.view-card .post-desc {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin: 0 0 0.75rem 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .cat-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+
+  /* Post List: Compact View */
+  .posts-container.view-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .posts-container.view-compact .post-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--line);
+    gap: 1.25rem;
+  }
+  .posts-container.view-compact .post-item:hover {
+    background: transparent;
+  }
+  .posts-container.view-compact .post-date {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    min-width: 85px;
+  }
+  .posts-container.view-compact .post-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    min-width: 0;
+    gap: 1rem;
+  }
+  .posts-container.view-compact .post-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text);
+  }
+  .posts-container.view-compact .post-title-link {
+    text-decoration: none;
+    min-width: 0;
+    flex: 1;
+  }
+  .posts-container.view-compact .post-title-link:hover .post-title {
+    color: var(--accent);
+  }
+  .posts-container.view-compact .post-desc {
+    display: none;
+  }
+  .posts-container.view-compact .post-meta .tag {
+    display: none;
+  }
+
+  /* Sidebar */
+  .blog-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .sidebar-box {
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .sidebar-title {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 0 0 0.85rem 0;
+    letter-spacing: 0.05em;
+  }
+  .author-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 0.4rem 0;
+    color: var(--text);
+  }
+  .author-bio {
+    font-size: 0.84rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin: 0 0 1rem 0;
+  }
+  .author-links {
+    display: flex;
+    gap: 0.75rem;
+    font-size: 0.78rem;
+  }
+  .author-links a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .author-links a:hover {
+    text-decoration: underline;
+  }
+
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .tag-cloud-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    text-decoration: none;
+    padding: 2px 7px;
+    background: var(--elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    transition: all 0.15s ease;
+  }
+  .tag-cloud-item:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .tag-num {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+  }
+
+  @media (max-width: 960px) {
+    .featured-grid {
+      grid-template-columns: 1fr;
+    }
+    .blog-main {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 640px) {
+    .posts-container.view-card .post-item {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .posts-container.view-compact .post-meta {
+      display: none;
+    }
+  }
+</style>

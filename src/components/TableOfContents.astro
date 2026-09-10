@@ -1,0 +1,86 @@
+---
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  toc.length >= 2 && (
+    <aside class="toc-sidebar print-hide" aria-label="文章大纲">
+      <div class="toc-sticky">
+        <div class="toc-header mono">
+          <span class="toc-led" aria-hidden="true" />
+          <span>CONTENTS</span>
+        </div>
+        <nav class="toc-nav">
+          <ul class="toc-list">
+            {toc.map((item) => (
+              <li class={`toc-item depth-${item.depth}`}>
+                <a href={`#${item.slug}`} class="toc-link" data-toc-slug={item.slug}>
+                  {item.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div class="toc-footer">
+          <a href="#" class="toc-top-btn mono" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
+            ↑ TOP
+          </a>
+        </div>
+      </div>
+    </aside>
+  )
+}
+
+<script is:inline>
+  (function () {
+    var links = document.querySelectorAll(".toc-link");
+    if (!links.length) return;
+
+    var headings = Array.from(document.querySelectorAll(".prose h2, .prose h3"));
+    if (!headings.length) return;
+
+    var activeSlug = "";
+
+    function highlight(slug) {
+      if (slug === activeSlug) return;
+      activeSlug = slug;
+      links.forEach(function (link) {
+        if (link.getAttribute("data-toc-slug") === slug) {
+          link.classList.add("active");
+        } else {
+          link.classList.remove("active");
+        }
+      });
+    }
+
+    // 使用 IntersectionObserver 监听标题位置
+    var observer = new IntersectionObserver(
+      function (entries) {
+        var visible = entries.filter(function (e) {
+          return e.isIntersecting;
+        });
+        if (visible.length > 0) {
+          // 选用最上方进入视口的标题
+          highlight(visible[0].target.id);
+        }
+      },
+      { rootMargin: "0px 0px -65% 0px", threshold: 0 }
+    );
+
+    headings.forEach(function (h) {
+      observer.observe(h);
+    });
+
+    // 默认高亮首个
+    if (headings[0] && headings[0].id) {
+      highlight(headings[0].id);
+    }
+  })();
+</script>

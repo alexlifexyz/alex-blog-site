@@ -1,0 +1,156 @@
+---
+import { getCollection } from "astro:content";
+import BlogLayout from "../layouts/BlogLayout.astro";
+import { getCategoryMeta } from "../utils/categories";
+
+const posts = (await getCollection("posts", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+// 按年份分组
+const yearsMap = new Map<number, typeof posts>();
+posts.forEach((post) => {
+  const year = post.data.pubDate.getFullYear();
+  if (!yearsMap.has(year)) {
+    yearsMap.set(year, []);
+  }
+  yearsMap.get(year)!.push(post);
+});
+
+const sortedYears = Array.from(yearsMap.keys()).sort((a, b) => b - a);
+---
+
+<BlogLayout title="历史文章时间归档 | Alex.blog" path="/archive">
+  <div class="content-wrap" style="padding: 3rem 0 6rem;">
+    <div style="margin-bottom: 3rem; border-bottom: 1px solid var(--line); padding-bottom: 1.5rem;">
+      <a href="/" class="back-link mono">← 返回博客首页</a>
+      <div style="display: flex; align-items: baseline; gap: 1rem; margin-top: 1.25rem; flex-wrap: wrap;">
+        <h1 style="font-size: 2.5rem; letter-spacing: -0.03em; margin: 0; color: var(--text);">文章时间归档</h1>
+        <span class="mono" style="color: var(--text-dim); font-size: 1rem;">共计 {posts.length} 篇文章</span>
+      </div>
+      <p style="color: var(--text-muted); margin-top: 0.75rem; font-size: 1rem;">
+        按发布年份与日期倒序索引的完整技术演进、架构落地方案与工程随笔。
+      </p>
+    </div>
+
+    <div class="timeline">
+      {
+        sortedYears.map((year) => {
+          const yearPosts = yearsMap.get(year)!;
+          return (
+            <div class="year-block">
+              <div class="year-header">
+                <span class="year-title mono">{year}</span>
+                <span class="year-count mono">{yearPosts.length} 篇</span>
+              </div>
+              <ul class="archive-list">
+                {yearPosts.map((post) => {
+                  const cat = getCategoryMeta(post.data.category);
+                  const dateStr = post.data.pubDate.toLocaleDateString("zh-CN", {
+                    month: "2-digit",
+                    day: "2-digit",
+                  }).replace(/\//g, "-");
+                  return (
+                    <li class="archive-item">
+                      <span class="archive-date mono">{dateStr}</span>
+                      <a href={`/posts/${post.slug}/`} class="archive-title">
+                        {post.data.title}
+                      </a>
+                      <span class="archive-cat" style={`color: ${cat.color}; background: color-mix(in srgb, ${cat.color} 12%, transparent);`}>
+                        {cat.name}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</BlogLayout>
+
+<style>
+  .back-link {
+    font-size: 0.85rem;
+    color: var(--accent);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+  .back-link:hover {
+    opacity: 0.8;
+  }
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+  .year-block {
+    position: relative;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--line-strong);
+  }
+  .year-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .year-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .year-count {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+  }
+  .archive-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .archive-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 1rem;
+  }
+  .archive-date {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    min-width: 3.5rem;
+  }
+  .archive-title {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    flex: 1;
+    min-width: 240px;
+    transition: color 0.15s ease;
+  }
+  .archive-title:hover {
+    color: var(--accent);
+  }
+  .archive-cat {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    .archive-item {
+      gap: 0.5rem;
+    }
+    .archive-title {
+      width: 100%;
+      order: 3;
+    }
+  }
+</style>
