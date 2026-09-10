@@ -240,23 +240,56 @@ a:hover {
 
 .brand-mark {
   background: var(--brand-mark-bg);
-  color: var(--signal);
+  color: var(--text);
   width: 32px;
   height: 32px;
   display: grid;
   place-items: center;
   border-radius: 6px;
   border: 1px solid var(--line-strong);
+  transition: all 0.2s ease;
+}
+
+.brand:hover .brand-mark {
+  border-color: var(--signal);
+  box-shadow: 0 0 12px var(--glow);
 }
 
 .brand-title {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1.05rem;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
+  display: inline-flex;
+  align-items: center;
+  text-transform: uppercase;
+}
+
+.brand-sep {
+  color: var(--signal);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin: 0 0.12rem;
+  opacity: 0.85;
 }
 
 .brand-title .ai {
   color: var(--signal);
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+.brand-led {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--live);
+  box-shadow: 0 0 0 2px #34d39924, 0 0 8px var(--live);
+  animation: pulse 2.4s ease-in-out infinite;
+  display: inline-block;
+  margin-left: 0.45rem;
+  flex-shrink: 0;
 }
 
 .theme-toggle {
