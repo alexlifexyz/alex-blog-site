@@ -15,8 +15,11 @@ const {
   title = "Alex.blog — 技术沉淀与数字花园",
   description = "何占伟 / Alex 的独立技术博客：专注企业级 RAG、Java 架构底座、AI 工业落地与行业思考。",
   path = "/",
-  image = "/social-card.jpg",
+  image = "/social-card.jpg?v=2",
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://blog.alexai.top");
+const socialImageURL = new URL(image, Astro.site || "https://blog.alexai.top");
 
 const navItems = [
   { label: "文章", href: "/" },
@@ -34,6 +37,8 @@ const navItems = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content="何占伟 / Alex" />
+    <link rel="canonical" href={canonicalURL} />
     <meta name="theme-color" content="#05070A" />
     <script is:inline>
       (function () {
@@ -57,12 +62,22 @@ const navItems = [
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    <!-- OpenGraph / 微信 / 社交分享卡片 -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url} />
-    <meta property="og:site_name" content="blog.alexai.top" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content="ALEX::BLOG" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL(image, Astro.url)} />
+    <meta property="og:image" content={socialImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter Cards -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={socialImageURL} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
