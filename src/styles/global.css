@@ -250,6 +250,12 @@ a:hover {
   transition: all 0.2s ease;
 }
 
+.brand-mark svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
 .brand:hover .brand-mark {
   border-color: var(--signal);
   box-shadow: 0 0 12px var(--glow);
@@ -278,18 +284,6 @@ a:hover {
   font-weight: 600;
   font-size: 0.95rem;
   letter-spacing: 0.04em;
-}
-
-.brand-led {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--live);
-  box-shadow: 0 0 0 2px #34d39924, 0 0 8px var(--live);
-  animation: pulse 2.4s ease-in-out infinite;
-  display: inline-block;
-  margin-left: 0.45rem;
-  flex-shrink: 0;
 }
 
 .theme-toggle {
