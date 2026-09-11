@@ -12,10 +12,10 @@ interface Props {
 }
 
 const {
-  title = "Alex.blog — 技术沉淀与数字花园",
-  description = "何占伟 / Alex 的独立技术博客：专注企业级 RAG、Java 架构底座、AI 工业落地与行业思考。",
+  title = "ALEX::BLOG — Java、Agent 与工程手记",
+  description = "何占伟 / Alex 的独立技术博客：Java 工程、Agent / AI 落地、RAG 实战与行业思考。",
   path = "/",
-  image = "/social-card.jpg?v=2",
+  image = "/social-card.jpg?v=3",
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://blog.alexai.top");
@@ -69,8 +69,11 @@ const navItems = [
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={socialImageURL} />
+    <meta property="og:image:alt" content="何占伟 / Alex — 独立技术博客" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:locale" content="zh_CN" />
 
     <!-- Twitter Cards -->
     <meta property="twitter:card" content="summary_large_image" />
