@@ -20,6 +20,10 @@ const {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://blog.alexai.top");
 const socialImageURL = new URL(image, Astro.site || "https://blog.alexai.top");
+const squareThumbURL = new URL(
+  image && !image.startsWith("/social-card") ? image : "/wechat-thumb.png?v=3",
+  Astro.site || "https://blog.alexai.top"
+);
 
 const navItems = [
   { label: "文章", href: "/" },
@@ -61,6 +65,13 @@ const navItems = [
       })();
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=3" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
+
+    <!-- 微信 / QQ / 国内移动端微格式 (Microdata) -->
+    <meta itemprop="name" content={title} />
+    <meta itemprop="description" content={description} />
+    <meta itemprop="image" content={squareThumbURL} />
 
     <!-- OpenGraph / 微信 / 社交分享卡片 -->
     <meta property="og:type" content="website" />
@@ -90,6 +101,10 @@ const navItems = [
     />
   </head>
   <body>
+    <!-- 微信移动端爬虫首图抓取占位 (处于 body 首位，不可使用 display:none) -->
+    <div style="position: absolute; top: -9999px; left: -9999px; width: 0; height: 0; overflow: hidden; opacity: 0;" aria-hidden="true">
+      <img src={squareThumbURL} alt={title} width="400" height="400" />
+    </div>
     <div class="app-frame">
       <header class="site-header">
         <div class="page-shell site-header-inner">
