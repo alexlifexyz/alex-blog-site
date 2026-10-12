@@ -1,5 +1,5 @@
 ---
-title: "Cursor-Composer2"
+title: "Cursor 发布自研模型 Composer 2：从套壳到原生"
 description: "就在我们还在讨论“AI 追热点疲劳”、感叹无数套壳工具（Wrappers）让我们审美疲劳时，AI 编程界的领头羊 Cursor（Anysphere）用一记重锤，砸碎了这种“外壳幻觉”。"
 pubDate: 2026-03-20
 category: "ai-engineering"

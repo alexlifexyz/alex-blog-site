@@ -1,5 +1,5 @@
 ---
-title: "FireworksAI-DeepDive"
+title: "拆解 Fireworks AI：Cursor 和 Kimi 背后的推理供应商"
 description: "当我们还在为“Cursor 到底套没套 Kimi 的壳”争得不可开交时，真正的大玩家正躲在屏幕后的阴影里，数着成倍增长的 Token。"
 pubDate: 2026-03-22
 category: "ai-engineering"

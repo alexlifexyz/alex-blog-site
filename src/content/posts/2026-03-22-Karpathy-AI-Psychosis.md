@@ -1,5 +1,5 @@
 ---
-title: "Karpathy-AI-Psychosis"
+title: "Karpathy 说他不写代码了：聊聊“AI 精神病”"
 description: "今天咱们不聊模型跑分，聊一个可能让你“后背发凉”的心理学现象。"
 pubDate: 2026-03-22
 category: "ai-engineering"

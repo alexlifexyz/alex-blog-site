@@ -1,5 +1,5 @@
 ---
-title: "Sam-Altman-Incident"
+title: "燃烧瓶砸向奥特曼家：AI 狂飙下被忽视的社会情绪"
 description: "凌晨 4 点，当旧金山还在沉睡时，一个 20 岁的年轻人走向了 OpenAI CEO Sam Altman 价值 2700 万美元的豪宅，投下了一枚莫洛托夫燃烧瓶。"
 pubDate: 2026-04-12
 category: "insights"

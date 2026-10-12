@@ -1,38 +1,41 @@
 ---
+import "../styles/fonts-subset.css";
+import "../styles/fonts.css";
+import "../styles/global.css";
 import BrandMark from "../components/BrandMark.astro";
 import ThemeSwitch from "../components/ThemeSwitch.astro";
 import SearchModal from "../components/SearchModal.astro";
-import "../styles/global.css";
 
 interface Props {
   title?: string;
   description?: string;
   path?: string;
-  image?: string;
+  type?: "website" | "article";
+  publishedTime?: string;
 }
 
+const SITE_NAME = "何占伟的博客";
 const {
-  title = "ALEX::BLOG — Java、Agent 与工程手记",
-  description = "何占伟 / Alex 的独立技术博客：Java 工程、Agent / AI 落地、RAG 实战与行业思考。",
+  title,
+  description = "何占伟（Alex）的博客：Java 后端、Agent 与 RAG 落地，以及一个老程序员对这一轮 AI 的观察。",
   path = "/",
-  image = "/social-card.jpg?v=3",
+  type = "website",
+  publishedTime,
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://blog.alexai.top");
-const socialImageURL = new URL(image, Astro.site || "https://blog.alexai.top");
-const squareThumbURL = new URL(
-  image && !image.startsWith("/social-card") ? image : "/wechat-thumb.png?v=4",
-  Astro.site || "https://blog.alexai.top"
-);
-const appleTouchIconURL = new URL("/apple-touch-icon.png?v=4", Astro.site || "https://blog.alexai.top");
+const fullTitle = title ? `${title} · ${SITE_NAME}` : SITE_NAME;
+const site = Astro.site || new URL("https://blog.alexai.top");
+const canonicalURL = new URL(Astro.url.pathname, site);
+const socialImageURL = new URL("/social-card.png?v=5", site);
+const squareThumbURL = new URL("/wechat-thumb.png?v=5", site);
 
 const navItems = [
   { label: "文章", href: "/" },
   { label: "归档", href: "/archive" },
-  { label: "标签", href: "/archive#tags" },
-  { label: "RSS", href: "/rss.xml", external: true },
-  { label: "主站", href: "https://alexai.top", external: true },
+  { label: "主站", href: "https://alexai.top", external: true, optional: true },
 ];
+const isCurrent = (href: string) =>
+  href === "/" ? path === "/" || path.startsWith("/posts") : path === href || path.startsWith(href + "/") || (href === "/archive" && path.startsWith("/tags"));
 ---
 
 <!doctype html>
@@ -40,150 +43,116 @@ const navItems = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
+    <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="author" content="何占伟 / Alex" />
     <link rel="canonical" href={canonicalURL} />
-    <meta name="theme-color" content="#05070A" />
+    <meta name="theme-color" content="#F5F6F3" />
     <script is:inline>
       (function () {
-        var KEY = "alexai-theme";
-        var pref = "system";
-        try {
-          pref = localStorage.getItem(KEY) || "system";
-        } catch (e) {}
-        if (pref !== "light" && pref !== "dark" && pref !== "system") pref = "system";
-        var theme =
-          pref === "system"
-            ? window.matchMedia("(prefers-color-scheme: dark)").matches
-              ? "dark"
-              : "light"
-            : pref;
+        var theme = null;
+        var m = document.cookie.match(/(?:^|;\s*)alexai-theme=(light|dark)/);
+        if (m) theme = m[1];
+        if (!theme) {
+          try {
+            var saved = localStorage.getItem("alexai-theme");
+            if (saved === "light" || saved === "dark") theme = saved;
+          } catch (e) {}
+        }
+        if (!theme) theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
         document.documentElement.dataset.theme = theme;
-        document.documentElement.dataset.themePref = pref;
         var meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute("content", theme === "light" ? "#F4F6F8" : "#05070A");
+        if (meta) meta.setAttribute("content", theme === "dark" ? "#15181B" : "#F5F6F3");
       })();
     </script>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=4" />
-    <link rel="apple-touch-icon" sizes="180x180" href={appleTouchIconURL} />
-    <link rel="apple-touch-icon-precomposed" href={appleTouchIconURL} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=5" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=5" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=5" />
+    <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href="/rss.xml" />
+    <link rel="preload" href="/fonts/ibm-plex-sans/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
 
-    <!-- 微信 / QQ / 国内移动端微格式 (Microdata) -->
-    <meta itemprop="name" content={title} />
+    <meta itemprop="name" content={fullTitle} />
     <meta itemprop="description" content={description} />
     <meta itemprop="image" content={squareThumbURL} />
 
-    <!-- OpenGraph / 微信 / 社交分享卡片 (优先使用 1:1 正方形缩略图，防止被微信强行裁切腰斩) -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:site_name" content="ALEX::BLOG" />
-    <meta property="og:title" content={title} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={title || SITE_NAME} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={squareThumbURL} />
-    <meta property="og:image:alt" content={title} />
     <meta property="og:image:width" content="400" />
     <meta property="og:image:height" content="400" />
-    <meta property="og:image:type" content="image/png" />
     <meta property="og:locale" content="zh_CN" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
 
-    <!-- Twitter Cards (保留 1200x630 宽屏科技卡片) -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={canonicalURL} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={socialImageURL} />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title || SITE_NAME} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageURL} />
   </head>
   <body>
-    <!-- 微信移动端爬虫首图抓取占位 (处于 body 首位，不可使用 display:none) -->
-    <div style="position: absolute; top: -9999px; left: -9999px; width: 0; height: 0; overflow: hidden; opacity: 0;" aria-hidden="true">
-      <img src={squareThumbURL} alt={title} width="400" height="400" />
+    <!-- WeChat's mobile crawler takes the first image in <body> as the share thumbnail. Kept off-screen, not display:none. -->
+    <div style="position:absolute;top:-9999px;left:-9999px;width:0;height:0;overflow:hidden;" aria-hidden="true">
+      <img src={squareThumbURL.href} alt="" width="400" height="400" />
     </div>
-    <div class="app-frame">
-      <header class="site-header">
-        <div class="page-shell site-header-inner">
-          <div class="header-brandline">
-            <a class="brand" href="/">
-              <span class="brand-mark"><BrandMark /></span>
-              <span class="brand-title">ALEX<span class="brand-sep">::</span><span class="ai">BLOG</span></span>
-            </a>
-            <ThemeSwitch />
-          </div>
-          <nav class="site-nav" aria-label="Primary">
+
+    <header class="site-header">
+      <div class="shell site-header-inner">
+        <a class="brand" href="/" aria-label="何占伟的博客，返回首页">
+          <BrandMark />
+          <span class="brand-name">何占伟</span>
+          <span class="brand-section">博客</span>
+        </a>
+        <div class="header-right">
+          <nav class="site-nav" aria-label="主导航">
             {
               navItems.map((item) => (
-                <a 
-                  href={item.href} 
-                  aria-current={path === item.href ? "page" : undefined}
+                <a
+                  href={item.href}
+                  class:list={{ "nav-optional": item.optional }}
                   target={item.external ? "_blank" : undefined}
-                  rel={item.external ? "noopener noreferrer" : undefined}
+                  rel={item.external ? "noopener" : undefined}
+                  aria-current={!item.external && isCurrent(item.href) ? "page" : undefined}
                 >
                   {item.label}
                 </a>
               ))
             }
-            <button class="nav-search-btn print-hide" data-open-search title="搜索文章 (快捷键 ⌘K 或 /)" aria-label="全站搜索">
-              <svg class="search-btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-              <span class="search-btn-kbd mono">⌘K</span>
-            </button>
           </nav>
+          <button class="icon-btn" type="button" data-open-search aria-label="搜索文章" title="搜索（/ 或 ⌘K）">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m20 20-3.5-3.5"></path>
+            </svg>
+          </button>
+          <ThemeSwitch />
         </div>
-      </header>
-      <main>
-        <slot />
-      </main>
-      <footer class="site-footer">
-        <div class="page-shell">
-          <div class="footer-inner">
-            <div class="footer-brand">
-              <a class="brand" href="/" style="margin-bottom: 1.25rem;">
-                <span class="brand-mark"><BrandMark /></span>
-                <span class="brand-title">ALEX<span class="brand-sep">::</span><span class="ai">BLOG</span></span>
-              </a>
-              <p style="line-height: 1.8; color: var(--text-muted); max-width: 360px;">
-                何占伟 / Alex 的独立技术博客与数字花园。<br />
-                持续输出企业级 RAG 实战、Java 架构工程与底层思考。
-              </p>
-            </div>
-            <div class="footer-nav-col">
-              <h4>专题分类</h4>
-              <ul>
-                <li><a href="/?cat=ai-engineering">AI 工业落地</a></li>
-                <li><a href="/?cat=architecture">Java 架构底座</a></li>
-                <li><a href="/?cat=insights">行业观察思考</a></li>
-                <li><a href="/?cat=essays">工程随笔生活</a></li>
-              </ul>
-            </div>
-            <div class="footer-nav-col">
-              <h4>关联系统</h4>
-              <ul>
-                <li><a href="https://alexai.top" target="_blank" rel="noopener noreferrer">Alex.ai 个人主站</a></li>
-                <li><a href="https://rag.alexai.top" target="_blank" rel="noopener noreferrer">Java RAG Lab</a></li>
-                <li><a href="https://chat.alexai.top" target="_blank" rel="noopener noreferrer">AI Assistant Suite</a></li>
-                <li><a href="https://github.com/alexlifexyz" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="footer-meta">
-            <p>&copy; {new Date().getFullYear()} 何占伟 · blog.alexai.top</p>
-            <p>Astro · Pagefind · Cloudflare Pages</p>
-          </div>
-        </div>
-      </footer>
-    </div>
+      </div>
+    </header>
 
-    <!-- 全站秒级全文检索弹窗 -->
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell">
+        <div class="footer-inner">
+          <div class="footer-who">
+            <strong>何占伟</strong>
+            Java 后端，成都
+          </div>
+          <div class="footer-links">
+            <a href="https://alexai.top" target="_blank" rel="noopener">主站</a>
+            <a href="https://rag.alexai.top" target="_blank" rel="noopener">RAG Lab</a>
+            <a href="https://github.com/alexlifexyz" target="_blank" rel="noopener">GitHub</a>
+            <a href="/rss.xml">RSS</a>
+          </div>
+        </div>
+        <p class="footer-meta">&copy; {new Date().getFullYear()} 何占伟 · 公众号 alexlifexyz</p>
+      </div>
+    </footer>
+
     <SearchModal />
   </body>
 </html>

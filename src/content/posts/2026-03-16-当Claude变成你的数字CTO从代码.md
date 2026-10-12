@@ -1,6 +1,6 @@
 ---
 title: "当 Claude 变成你的“数字 CTO”：从代码补全到生成式交互的跨越"
-description: "**Alex 简评**：Claude 最近的动作证明了一件事：AI 编程的终局不是让你写代码更快，而是让“写代码”这件事本身消失，取而代之的是一种名为“生成式交互”的全新指挥方式。"
+description: "Claude 最近的动作证明了一件事：AI 编程的终局不是让你写代码更快，而是让“写代码”这件事本身消失，取而代之的是一种名为“生成式交互”的全新指挥方式。"
 pubDate: 2026-03-16
 category: "ai-engineering"
 tags: ["Agent", "Claude", "Anthropic", "工程思考"]

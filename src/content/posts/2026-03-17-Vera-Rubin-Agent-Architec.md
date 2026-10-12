@@ -1,5 +1,5 @@
 ---
-title: "Vera-Rubin-Agent-Architecture"
+title: "GTC 2026 的 Vera Rubin：英伟达在为 Agent 造底座"
 description: "昨晚 NVIDIA GTC 2026 大会的意义已经超越了单纯的硬件发布，这更像是一场关于工业重构的动员。Vera Rubin 架构的出现，清晰地划定了 AI 计算的分水岭：底座正在从“大模型训练”转向“Agent 实时执行”。写代码的黄金"
 pubDate: 2026-03-17
 category: "ai-engineering"
