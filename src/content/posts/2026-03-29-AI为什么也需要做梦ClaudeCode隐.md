@@ -1,14 +1,11 @@
 ---
 title: "AI 为什么也需要做梦？Claude Code 隐藏的“记忆清洗”机制"
-description: "[要求：宝玉风格 (Baoyu-Style)，3D毛玻璃质感，C4D渲染。画面：一颗半透明的赛博机械大脑安静地沉入深色的水底，周围漂浮着散发微光的几何数据碎片，宛如正在做梦。极简，高反差电影级光影。比例 2.35:1]"
+description: "最近，外网的极客圈里炸开了一个隐藏更新：Anthropic 悄悄给 Claude Code 上线了一个名为 AutoDream（自动做梦） 的机制，你甚至可以通过敲击 /dream…"
 pubDate: 2026-03-29
 category: "ai-engineering"
 tags: ["Agent", "Claude", "Anthropic", "工程思考"]
 draft: false
 ---
-
-### 今日封面生成指令 (De-AI Style)
-[要求：宝玉风格 (Baoyu-Style)，3D毛玻璃质感，C4D渲染。画面：一颗半透明的赛博机械大脑安静地沉入深色的水底，周围漂浮着散发微光的几何数据碎片，宛如正在做梦。极简，高反差电影级光影。比例 2.35:1]
 
 ### ■ 大模型不需要睡觉，但你的 Agent 需要
 
@@ -50,6 +47,3 @@ Claude Code 的 AutoDream 撕开了 Agent 进化的下一层窗户纸：AI 不�
 懂技术的玩家，已经开始构建本地 Agent 的“睡眠与记忆清洗”流水线了。
 
 **守住你的堆栈，管理你的记忆。那是你不被做成 Token 的最后防线。**
-
----
-想要深入了解 OpenClaw 架构或获取《大模型接口适配工具包》，后台回复关键词：**1**。

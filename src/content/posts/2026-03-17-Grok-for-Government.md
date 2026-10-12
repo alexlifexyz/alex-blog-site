@@ -1,5 +1,5 @@
 ---
-title: "Grok-for-Government"
+title: "Grok 拿下国防部合同：当 Agent 成为国家机器的一部分"
 description: "当马斯克的 xAI 拿下美国国防部（DOD）那张价值 2 亿美元的支票时，Agent 的身份已经彻底完成了从“效率工具”到“战略武器”的垂直跨越。"
 pubDate: 2026-03-17
 category: "ai-engineering"

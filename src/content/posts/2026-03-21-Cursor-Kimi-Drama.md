@@ -1,5 +1,5 @@
 ---
-title: "Cursor-Kimi-Drama"
+title: "Cursor 与 Kimi 的 24 小时：智力供应链的一次公开重构"
 description: "2026 年 3 月 21 日，AI 圈上演了一部史诗级的“赛博爽剧”。"
 pubDate: 2026-03-21
 category: "ai-engineering"

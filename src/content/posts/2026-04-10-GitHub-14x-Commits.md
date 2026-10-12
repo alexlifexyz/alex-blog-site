@@ -1,5 +1,5 @@
 ---
-title: "GitHub-14x-Commits"
+title: "GitHub 提交量涨了 14 倍，写代码的速度不再是瓶颈"
 description: "GitHub 刚刚公布的数据，直接把所有人都给看沉默了。"
 pubDate: 2026-04-10
 category: "ai-engineering"

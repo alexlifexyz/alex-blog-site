@@ -1,0 +1,38 @@
+---
+import { getCategoryMeta, normalizeCategory } from "../utils/categories";
+import { md, ymd, postUrl, plain, type Post } from "../utils/posts";
+
+interface Props {
+  posts: Post[];
+  compact?: boolean;
+  fullDate?: boolean;
+}
+
+const { posts, compact = false, fullDate = false } = Astro.props;
+---
+
+<ul class:list={["post-list", { compact }]}>
+  {
+    posts.map((post) => (
+      <li data-category={normalizeCategory(post.data.category)}>
+        <a class="post-row" href={postUrl(post)}>
+          <time class="post-row-date" datetime={ymd(post.data.pubDate)}>
+            {fullDate ? ymd(post.data.pubDate) : md(post.data.pubDate)}
+          </time>
+          <div>
+            <h3 class="post-row-title">{post.data.title}</h3>
+            {!compact && post.data.description && <p class="post-row-desc">{plain(post.data.description)}</p>}
+            {!compact && (
+              <div class="post-row-meta">
+                <span class="cat">{getCategoryMeta(post.data.category).name}</span>
+                {post.data.tags.slice(0, 3).map((t) => (
+                  <span>#{t}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        </a>
+      </li>
+    ))
+  }
+</ul>

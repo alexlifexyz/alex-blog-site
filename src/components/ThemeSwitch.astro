@@ -1,61 +1,55 @@
 ---
+// Sun / moon toggle. The icon shows the theme you will switch to.
+// The choice is shared across *.alexai.top through a cookie, with localStorage as a fallback.
 ---
 
-<button
-  class="theme-toggle"
-  type="button"
-  aria-label="切换浅色或深色"
-  title="切换浅色 / 深色"
->
-  <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.75" />
-    <path
-      d="M12 3v1.6M12 19.4V21M4.9 4.9l1.1 1.1M18 18l1.1 1.1M3 12h1.6M19.4 12H21M4.9 19.1l1.1-1.1M18 6l1.1-1.1"
-      stroke="currentColor"
-      stroke-width="1.75"
-      stroke-linecap="round"
-    />
+<button class="icon-btn theme-toggle" type="button" aria-label="切换浅色或深色" title="切换浅色 / 深色">
+  <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
   </svg>
-  <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"></circle>
     <path
-      d="M16.2 13.2A6.2 6.2 0 0 1 10.8 4.6 7 7 0 1 0 19.4 13.8a6.2 6.2 0 0 1-3.2-.6Z"
+      d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"
       stroke="currentColor"
-      stroke-width="1.75"
-      stroke-linejoin="round"
-    />
+      stroke-width="1.6"
+      stroke-linecap="round"></path>
   </svg>
 </button>
 
 <script is:inline>
   (function () {
     var KEY = "alexai-theme";
+    var COLORS = { light: "#F5F6F3", dark: "#15181B" };
     var root = document.documentElement;
     var btn = document.querySelector(".theme-toggle");
     if (!btn) return;
 
-    function paintMeta(theme) {
-      var meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.setAttribute("content", theme === "light" ? "#F4F6F8" : "#05070A");
-    }
-
     function current() {
-      return root.dataset.theme === "light" ? "light" : "dark";
+      return root.dataset.theme === "dark" ? "dark" : "light";
     }
 
-    function apply(theme) {
-      root.dataset.theme = theme;
-      root.dataset.themePref = theme;
+    function label(theme) {
+      btn.setAttribute("aria-label", theme === "dark" ? "切换到浅色" : "切换到深色");
+    }
+
+    function save(theme) {
+      var domain = /(^|\.)alexai\.top$/.test(location.hostname) ? "; domain=.alexai.top" : "";
+      document.cookie = KEY + "=" + theme + "; path=/; max-age=31536000; SameSite=Lax" + domain;
       try {
         localStorage.setItem(KEY, theme);
       } catch (e) {}
-      paintMeta(theme);
-      btn.setAttribute("aria-label", theme === "light" ? "当前浅色，点击切换到深色" : "当前深色，点击切换到浅色");
     }
 
     btn.addEventListener("click", function () {
-      apply(current() === "light" ? "dark" : "light");
+      var next = current() === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      save(next);
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute("content", COLORS[next]);
+      label(next);
     });
 
-    btn.setAttribute("aria-label", current() === "light" ? "当前浅色，点击切换到深色" : "当前深色，点击切换到浅色");
+    label(current());
   })();
 </script>

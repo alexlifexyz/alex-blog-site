@@ -1,13 +1,11 @@
 ---
-title: "MitchellHashimoto不再适合严肃工作"
-description: "Ghostty 为什么逃离 GitHub，那句“不再适合严肃工作”太扎心"
+title: "Ghostty 为什么逃离 GitHub，那句“不再适合严肃工作”太扎心"
+description: "4 月 28 日，Mitchell Hashimoto 发了一篇博客，正式宣布 Ghostty 会逐步离开 GitHub。"
 pubDate: 2026-04-29
 category: "essays"
 tags: ["随笔思考"]
 draft: false
 ---
-
-Ghostty 为什么逃离 GitHub，那句“不再适合严肃工作”太扎心
 
 4 月 28 日，Mitchell Hashimoto 发了一篇博客，正式宣布 Ghostty 会逐步离开 GitHub。
 

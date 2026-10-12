@@ -1,5 +1,5 @@
 ---
-title: "Claude-Code-Channels"
+title: "Claude Code Channels 上线：大厂开始收编 OpenClaw 玩法"
 description: "如果说之前的 OpenClaw 是极客们手中的“瑞士军刀”，那么 2026 年 3 月 20 日，Anthropic 正式发布的 **Claude Code Channels**，则更像是一把精准制导的“官方重锤”。"
 pubDate: 2026-03-20
 category: "ai-engineering"

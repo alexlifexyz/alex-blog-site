@@ -1,5 +1,5 @@
 ---
-title: "MiniMax与小米MiMo"
+title: "MiniMax 2.7 与小米 MiMo V2 Pro：国产模型的 48 小时"
 description: "过去 48 小时，国产模型圈正在经历一场自 AGI 概念诞生以来最密集的“范式跃迁”。"
 pubDate: 2026-03-19
 category: "ai-engineering"
