@@ -16,10 +16,14 @@ featured: false            # true 会进入首页「精选」（最多 3 篇）
 draft: false               # true 不发布
 ```
 
+## 发布
+
+Cloudflare Pages 项目 `alex-blog` 连接本仓库：推送任意分支生成预览 `https://<分支>.alex-blog-3x8.pages.dev`，合并到 `main` 约 1 分钟后上线。
+
 ## 本地运行
 
 ```bash
-npm install
+npm ci
 npm run dev        # 开发预览（搜索在构建后才可用）
 npm run build      # 构建 + 生成搜索索引
 ```
