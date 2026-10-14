@@ -10,7 +10,7 @@ import os
 import re
 from pathlib import Path
 
-SOURCE_DIR = Path("/Users/mac/studio/20-content/wechat-content-workspace")
+SOURCE_DIR = Path.home() / "studio" / "02-projects" / "wechat-content-workspace"
 TARGET_DIR = Path(__file__).resolve().parent.parent / "src" / "content" / "posts"
 
 EMOJI_PATTERN = re.compile(
