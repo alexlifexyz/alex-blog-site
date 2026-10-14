@@ -1,6 +1,6 @@
 # alex-blog-site
 
-何占伟的博客。Astro 静态站，Pagefind 全文搜索。
+Alex 的博客。Astro 静态站，Pagefind 全文搜索。
 
 ## 写文章
 

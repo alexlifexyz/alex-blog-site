@@ -1,6 +1,6 @@
 # alex-blog-site
 
-Alex（何占伟）的博客 https://blog.alexai.top 。写文章、开发、发布见 `README.md`；当前状态见 `.ai/NOW.md`。
+Alex 的博客 https://blog.alexai.top 。写文章、开发、发布见 `README.md`；当前状态见 `.ai/NOW.md`。
 
 ## 规则
 

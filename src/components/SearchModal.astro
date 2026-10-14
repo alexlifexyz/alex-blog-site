@@ -97,7 +97,7 @@
       status.textContent = "共 " + res.results.length + " 篇";
       results.innerHTML = items
         .map(function (d) {
-          var title = (d.meta && d.meta.title ? d.meta.title : d.url).replace(/\s*[|·–-]\s*何占伟的博客$/, "");
+          var title = (d.meta && d.meta.title ? d.meta.title : d.url).replace(/\s*[|·–-]\s*Alex 的博客$/, "");
           return '<a href="' + esc(d.url) + '"><strong>' + esc(title) + "</strong><p>" + d.excerpt + "</p></a>";
         })
         .join("");
