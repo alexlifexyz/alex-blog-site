@@ -8,7 +8,7 @@ export async function GET(context: APIContext) {
 
   return rss({
     title: "Alex 的博客",
-    description: "Java 后端、Agent 与 RAG 落地，以及一个老程序员对这一轮 AI 的观察。",
+    description: "Agent 与 RAG 落地、后端工程，以及对这一轮 AI 的观察。",
     site: context.site || "https://blog.alexai.top",
     items: posts.map((post) => ({
       title: post.data.title,
