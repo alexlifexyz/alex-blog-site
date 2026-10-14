@@ -14,10 +14,10 @@ interface Props {
   publishedTime?: string;
 }
 
-const SITE_NAME = "何占伟的博客";
+const SITE_NAME = "Alex 的博客";
 const {
   title,
-  description = "何占伟（Alex）的博客：Java 后端、Agent 与 RAG 落地，以及一个老程序员对这一轮 AI 的观察。",
+  description = "Alex 的博客：Agent 与 RAG 落地、后端工程，以及对这一轮 AI 的观察。",
   path = "/",
   type = "website",
   publishedTime,
@@ -26,8 +26,8 @@ const {
 const fullTitle = title ? `${title} · ${SITE_NAME}` : SITE_NAME;
 const site = Astro.site || new URL("https://blog.alexai.top");
 const canonicalURL = new URL(Astro.url.pathname, site);
-const socialImageURL = new URL("/social-card.png?v=5", site);
-const squareThumbURL = new URL("/wechat-thumb.png?v=5", site);
+const socialImageURL = new URL("/social-card.png?v=6", site);
+const squareThumbURL = new URL("/wechat-thumb.png?v=6", site);
 
 const navItems = [
   { label: "文章", href: "/" },
@@ -45,7 +45,7 @@ const isCurrent = (href: string) =>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <meta name="author" content="何占伟 / Alex" />
+    <meta name="author" content="Alex" />
     <link rel="canonical" href={canonicalURL} />
     <meta name="theme-color" content="#F5F6F3" />
     <script is:inline>
@@ -65,9 +65,9 @@ const isCurrent = (href: string) =>
         if (meta) meta.setAttribute("content", theme === "dark" ? "#15181B" : "#F5F6F3");
       })();
     </script>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=5" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=5" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=5" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=6" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=6" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=6" />
     <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href="/rss.xml" />
     <link rel="preload" href="/fonts/ibm-plex-sans/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
 
@@ -99,9 +99,9 @@ const isCurrent = (href: string) =>
 
     <header class="site-header">
       <div class="shell site-header-inner">
-        <a class="brand" href="/" aria-label="何占伟的博客，返回首页">
+        <a class="brand" href="/" aria-label="Alex 的博客，返回首页">
           <BrandMark />
-          <span class="brand-name">何占伟</span>
+          <span class="brand-name">Alex</span>
           <span class="brand-section">博客</span>
         </a>
         <div class="header-right">
@@ -139,8 +139,8 @@ const isCurrent = (href: string) =>
       <div class="shell">
         <div class="footer-inner">
           <div class="footer-who">
-            <strong>何占伟</strong>
-            Java 后端，成都
+            <strong>Alex</strong>
+            后端工程师，成都
           </div>
           <div class="footer-links">
             <a href="https://alexai.top" target="_blank" rel="noopener">主站</a>
@@ -149,7 +149,7 @@ const isCurrent = (href: string) =>
             <a href="/rss.xml">RSS</a>
           </div>
         </div>
-        <p class="footer-meta">&copy; {new Date().getFullYear()} 何占伟 · 公众号 alexlifexyz</p>
+        <p class="footer-meta">&copy; {new Date().getFullYear()} Alex · 公众号 alexlifexyz</p>
       </div>
     </footer>
 
