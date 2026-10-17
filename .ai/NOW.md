@@ -21,3 +21,5 @@
 ```bash
 cd ~/studio/02-projects/alex-blog-site && git status && npm ci && npm run build
 ```
+
+- 2026-10-17 PR #4：logo 换成帆影 A（与主站一致），favicon、Apple 图标、社交卡片同步，已上线。社交卡片上的副标题「Agent 与 RAG 落地、后端工程」还是旧定位，没改。
