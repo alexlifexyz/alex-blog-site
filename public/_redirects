@@ -1,5 +1,5 @@
-/writing              /          301
-/writing/             /          301
-/writing/*            /posts/:splat  301
-/posts                /          301
-/posts/               /          301
+# 2026-10-19: the blog moved to https://alexai.top/blog/ (alexlifexyz-site Decision 11).
+# Curated posts keep their slug there; posts that were not moved end on the main site's 404 page.
+/posts/*   https://alexai.top/blog/:splat   301
+/rss.xml   https://alexai.top/blog/rss.xml  301
+/*         https://alexai.top/blog/         301
