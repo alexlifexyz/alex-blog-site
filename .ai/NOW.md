@@ -1,6 +1,6 @@
 # NOW
 
-更新时间：2026-10-14
+更新时间：2026-10-19
 
 ## 状态
 
@@ -23,3 +23,5 @@ cd ~/studio/02-projects/alex-blog-site && git status && npm ci && npm run build
 ```
 
 - 2026-10-17 PR #4：logo 换成帆影 A（与主站一致），favicon、Apple 图标、社交卡片同步，已上线。社交卡片上的副标题「Agent 与 RAG 落地、后端工程」还是旧定位，没改。
+
+- 2026-10-19 博客迁到主站 `alexai.top/blog/`（主站 Decision 11）：挑了 20 篇有第一手内容、800 字以上的文章，清理后搬进 `alexlifexyz-site/src/content/posts`，以后在主站仓库写。本仓库分支 `chore/move-to-main-site`（未推送）把整站 301 到主站：`/posts/*` 按原 slug 跳，其余跳 `/blog/`。合并上线后本仓库归档（`studio archive`，Alex 确认）。
