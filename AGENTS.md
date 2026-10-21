@@ -13,7 +13,7 @@ Alex 的博客 https://blog.alexai.top 。写文章、开发、发布见 `README
 
 ## 协作
 
-- 改动先开分支，推送后看 Pages 预览，Alex 确认后再合并到 `main`。推送前先问。
+- 改动先开分支，推送后看 Pages 预览，新的对外内容（页面、文章、对外数字）等 Alex 确认后再合并到 `main`；机械改动和已批准方案的改动验证通过可以直接合并（授权表见 `alex-work-system/docs/ai-team.md`）。
 - 提交信息用中文。
 - 改完跑 `npm run check` 和 `npm run build`，都通过再提交。
 - 会话结束更新 `.ai/NOW.md`。
